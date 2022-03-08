@@ -1,0 +1,78 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<h3>Результаты поиска по запросу -  {{q}}</h3> 
+<!-- {{ results }} -->
+<ul class="list-articles">
+	{% for p in results_name %}
+			<li><div class="article-panel">
+	<p class="first"><b>Статус:</b> {{p.cats}} &nbsp;&nbsp;&nbsp;<b>Исполнитель:</b> {{p.executor}}</p>
+
+	<p class="last">Дата начала: {{p.data_start}}</p>
+</div> 
+
+			<div class="clear"></div>
+			<table border="0" width="100%">
+				<tr>
+					<td><b>Тип</b></td>
+					<td><b>Наименование</b></td>
+					<td><b>Номер</b></td>
+					<td><b>Номер акта</b></td>
+					<td><b>Дец.номер</b></td>
+					<td><b>Дата начала</b></td>
+					<td><b>Дата завершения</b></td>
+					<td><b>Количество</b></td>
+					<td><b>Вид испытаний</b></td>
+				</tr>
+				<tr>
+					<td>{{p.device_type}}</td>
+					<td>{{p.device_name}}</td>
+					<td>{{p.number}}</td>
+					<td>{{p.act_number}}</td>
+					<td>{{p.dec_number}}</td>
+					<td>{{p.date_start}}</td>
+					<td>{{p.date_stop}}</td>
+					<td>{{p.quantity}}</td>
+					<td>{{p.test_type}}</td>
+				</tr>
+			</table>
+			<p class="link-read-post"><a href="{{ p.get_absolute_url }}">Открыть изделие</a></p>
+			
+			</li>
+	{% endfor %}
+	{% for p in results_dec %}
+			<li><div class="article-panel">
+	<p class="first"><b>Статус:</b> {{p.cats}} &nbsp;&nbsp;&nbsp;<b>Исполнитель:</b> {{p.executor}}</p>
+
+	<p class="last">Дата начала: {{p.data_start}}</p>
+</div> 
+
+			<div class="clear"></div>
+			<table border="0" width="100%">
+				<tr>
+					<td><b>Тип</b></td>
+					<td><b>Наименование</b></td>
+					<td><b>Номер</b></td>
+					<td><b>Дец.номер</b></td>
+					<td><b>Дата начала</b></td>
+					<td><b>Дата завершения</b></td>
+					<td><b>Количество</b></td>
+					<td><b>Вид испытаний</b></td>
+				</tr>
+				<tr>
+					<td>{{p.device_type}}</td>
+					<td>{{p.device_name}}</td>
+					<td>{{p.number}}</td>
+					<td>{{p.dec_number}}</td>
+					<td>{{p.date_start}}</td>
+					<td>{{p.date_stop}}</td>
+					<td>{{p.quantity}}</td>
+					<td>{{p.test_type}}</td>
+				</tr>
+			</table>
+			<p class="link-read-post"><a href="{{ p.get_absolute_url }}">Открыть изделие</a></p>
+			
+			</li>
+	{% endfor %}
+</ul>
+{% endblock %}

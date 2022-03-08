@@ -1,0 +1,484 @@
+{% extends 'contract/base.html' %}
+{% block content %}
+
+<table border="1" width="100%" bgcolor="#FFFFDD" bordercolor="#d3d3d3">
+    <tr>
+        <td width="25%"><b>Наименование поля</b></td>
+        <td width="25%"><b>Значение</b></td>
+        <td width="25%"><b>Действие</b></td>
+
+    </tr>
+    <tr>
+        <td><p></p>Организация<p></p></td>
+        <td>{{post.organization}}</td>
+        <td align = "center" rowspan="4" ><a href="{% url 'editline' post.id 1 %}"><b>Изменить</b></a></td>
+    </tr>
+    <tr>
+        <td><p></p>Изделие<p></p></td>
+        <td>{{post.device}}</td>
+    </tr>
+    <tr>
+        <td><p></p>Входящий номер<p></p></td>
+        <td>{{post.enter_number}}</td>
+    </tr>
+    <tr>
+
+        <td><p></p>Дата заявки<p></p></td>
+        <td>{{post.request_date}}</td>
+    </tr>
+</table>
+
+<p></p>
+
+<table border="1" width="100%" bgcolor="#FFFFDD" bordercolor="#d3d3d3">
+    <tr>
+        <td  width="25%"><p></p>Исходящий номер заказчика<p></p></td>
+        {% if post.customer_out_number %}
+            <td  width="25%">{{post.customer_out_number}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+        <td  width="25%" align = "center" rowspan="3" ><a href="{% url 'editline' post.id 2 %}"><b>Изменить</b></a></td>
+    </tr>
+    <tr>
+        <td><p></p>Дата исходящего письма заказчика<p></p></td>
+        {% if post.customer_out_date %}
+            <td>{{post.customer_out_date}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+    <tr>
+        <td><p></p>Контакты заказчика<p></p></td>
+        {% if post.customer_phone %}
+            <td>{{post.customer_phone}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+</table>
+
+<p></p>
+<!-- EQ_WORK-->
+<table border="1" width="100%" bgcolor="#FFFFDD" bordercolor="#d3d3d3">
+    <tr>
+        <td  width="25%"><p></p>Наработка оборудования<p></p></td>
+        {% if equipment %}
+            <td  width="25%">
+                {% for eq in equipment %}
+                {% if eq.line_contract_id == post.pk %}
+                    {{eq.eq_name}} <a href="{% url 'editEquipmentWork' post.pk eq.pk %}"><b>{{eq.mode}}</b></a>
+                <p></p>
+                {% endif %}
+                {% endfor %}
+            </td>
+        {% else %}
+        <td  width="25%"></td>
+        {% endif %}
+        <td  width="25%" align = "center" ><a href="{% url 'addequipment' post.id %}"><b>Добавить</b></a></td>
+    </tr>
+</table>
+
+<p></p>
+<!-- LETTERS-->
+<table border="1" width="100%" bgcolor="#FFFFDD" bordercolor="#d3d3d3">
+    <tr>
+        <td  width="25%"><p></p>Письма<p></p></td>
+        {% if letters %}
+            <td  width="25%">
+                {% for letter in letters %}
+                {% if letter.line_contract_id == post.pk %}
+                {{letter.letter_status}} № <a href="{% url 'editletter' post.pk letter.pk %}">
+                <b>{{letter.number}}</b></a> от {{letter.date}}
+
+            <p></p>
+                {% endif %}
+                {% endfor %}
+            </td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+        <td  width="25%" align = "center" rowspan="3" ><a href="{% url 'addletter' post.id %}"><b>Добавить</b></a></td>
+    </tr>
+</table>
+
+<p></p>
+
+<table border="1" width="100%" bgcolor="#FFFFDD" bordercolor="#d3d3d3">
+    <tr>
+        <td  width="25%"><p></p>Служебная записка<p></p></td>
+        {% if post.official_memo %}
+            <td  width="25%">{{post.official_memo}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+        <td  width="25%" align = "center" rowspan="2" ><a href="{% url 'editline' post.id 3 %}"><b>Изменить</b></a></td>
+    </tr>
+    <tr>
+        <td><p></p>Дата СЗ<p></p></td>
+        {% if post.official_memo_date %}
+            <td>{{post.official_memo_date}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+</table>
+
+<p></p>
+
+<table border="1" width="100%" bgcolor="#FFFFDD" bordercolor="#d3d3d3">
+    <tr>
+        <td  width="25%"><p></p>Время занятости персонала<p></p></td>
+        {% if post.personal_time %}
+            <td  width="25%">{{post.personal_time}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+        <td  width="25%" align = "center" rowspan="3" ><a href="{% url 'editline' post.id 4 %}"><b>Изменить</b></a></td>
+    </tr>
+    <tr>
+        <td><p></p>Время занятости согл. ШПЗ<p></p></td>
+        {% if post.personal_time_spz %}
+            <td>{{post.personal_time_spz}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+    <tr>
+        <td><p></p>Время занятости согл. ВП<p></p></td>
+        {% if post.personal_time_vp %}
+            <td>{{post.personal_time_vp}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+</table>
+
+<p></p>
+
+<table border="1" width="100%" bgcolor="#FFFFDD" bordercolor="#d3d3d3">
+    <tr>
+        <td  width="25%"><p></p>Плановая дата испытания<p></p></td>
+        {% if post.expected_test_date %}
+            <td  width="25%">{{post.expected_test_date}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+        <td  width="25%" align = "center" ><a href="{% url 'editline' post.id 5 %}"><b>Изменить</b></a></td>
+    </tr>
+</table>
+
+<p></p>
+
+<table border="1" width="100%" bgcolor="#FFFFDD" bordercolor="#d3d3d3">
+    <tr>
+        <td  width="25%"><p></p>Дата оповещения<p></p></td>
+        {% if post.notification_date %}
+            <td  width="25%">{{post.notification_date}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+        <td  width="25%" align = "center" rowspan="2" ><a href="{% url 'editline' post.id 6 %}"><b>Изменить</b></a></td>
+    </tr>
+    <tr>
+        <td><p></p>Заказчик<p></p></td>
+        {% if post.notification_name %}
+            <td>{{post.notification_name}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+</table>
+
+<p></p>
+
+<!-- WHITE BACKGROUND -->
+
+<table border="1" width="100%" bgcolor="" bordercolor="#d3d3d3">
+    <tr>
+        <td  width="25%"><p></p>Статус<p></p></td>
+        {% if post.status %}
+            <td  width="25%">{{post.status}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+        <td  width="25%" align = "center" rowspan="2" ><a href="{% url 'editline' post.id 7 %}"><b>Изменить</b></a></td>
+    </tr>
+    <tr>
+        <td><p></p>Примечания<p></p></td>
+        {% if post.comment %}
+            <td>{{post.comment}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+</table>
+
+<p></p>
+
+<!-- BLUE BACKGROUND -->
+
+<table border="1" width="100%" bgcolor="#E0FFFF" bordercolor="#d3d3d3">
+    <tr>
+        <td  width="25%"><p></p>Ориентировочная стоимость (руб)<p></p></td>
+        {% if post.expected_cost %}
+            <td  width="25%">{{post.expected_cost}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+        <td  width="25%" align = "center" rowspan="2" ><a href="{% url 'editline' post.id 8 %}"><b>Изменить</b></a></td>
+    </tr>
+    <tr>
+        <td><p></p>Фактическая стоимость (руб)<p></p></td>
+        {% if post.fact_cost %}
+            <td>{{post.fact_cost}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+</table>
+
+<p></p>
+
+<table border="1" width="100%" bgcolor="#E0FFFF" bordercolor="#d3d3d3">
+    <tr>
+        <td  width="25%"><p></p>Договор (Счет)<p></p></td>
+        {% if post.bill %}
+            <td  width="25%">{{post.bill}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+        <td  width="25%" align = "center" rowspan="5" ><a href="{% url 'editline' post.id 9 %}"><b>Изменить</b></a></td>
+    </tr>
+    <tr>
+        <td><p></p>Дата договора<p></p></td>
+        {% if post.bill_date %}
+            <td>{{post.bill_date}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+    <tr>
+        <td><p></p>Дата подписания договора<p></p></td>
+        {% if post.bill_date_signing %}
+            <td>{{post.bill_date_signing}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+    <tr>
+        <td><p></p>Дата окончания договора<p></p></td>
+        {% if post.bill_date_final %}
+            <td>{{post.bill_date_final}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+    <tr>
+        <td><p></p>Дата окончания договора<p></p></td>
+        {% if post.in_gov_contract_from %}
+            <td>{{post.in_gov_contract_from}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+</table>
+
+<!-- LAVENDER BACKGROUND -->
+
+<p></p>
+
+<table border="1" width="100%" bgcolor="#E6E6FA" bordercolor="#d3d3d3">
+    <tr>
+        <td  width="25%"><p></p>Протокол согласования цены/ С/З о цене<p></p></td>
+        {% if post.price_protocol %}
+            <td  width="25%">{{post.price_protocol}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+        <td  width="25%" align = "center" rowspan="6" ><a href="{% url 'editline' post.id 10 %}"><b>Изменить</b></a></td>
+    </tr>
+    <tr>
+        <td><p></p>Запрос ОЦО в 146 ВП о предоставлении РКМ<p></p></td>
+        {% if post.RKM_request %}
+            <td>{{post.RKM_request}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+    <tr>
+        <td><p></p>№ папки/дела<p></p></td>
+        {% if post.deal_number %}
+            <td>{{post.deal_number}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+    <tr>
+        <td><p></p>Наше исходящее письмо о цене<p></p></td>
+        {% if post.price_letter_number %}
+            <td>{{post.price_letter_number}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+    <tr>
+        <td><p></p>№ нашего исх. (об отправке договорного документа)<p></p></td>
+        {% if post.out_letter_number %}
+            <td>{{post.out_letter_number}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+    <tr>
+        <td><p></p>Дата отправки договорного документа<p></p></td>
+        {% if post.send_date %}
+            <td>{{post.send_date}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+</table>
+
+<p></p>
+
+<table border="1" width="100%" bgcolor="#E6E6FA" bordercolor="#d3d3d3">
+    <tr>
+        <td  width="25%"><p></p>№  счета на оплату<p></p></td>
+        {% if post.bill_number %}
+            <td  width="25%">{{post.bill_number}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+        <td  width="25%" align = "center" rowspan="2" ><a href="{% url 'editline' post.id 11 %}"><b>Изменить</b></a></td>
+    </tr>
+    <tr>
+        <td><p></p>Дата счета на оплату<p></p></td>
+        {% if post.pay_bill_date %}
+            <td>{{post.pay_bill_date}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+</table>
+
+<p></p>
+
+<table border="1" width="100%" bgcolor="#E6E6FA" bordercolor="#d3d3d3">
+    <tr>
+        <td  width="25%"><p></p>№ П/П<p></p></td>
+        {% if post.pp_number %}
+            <td  width="25%">{{post.pp_number}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+        <td  width="25%" align = "center" rowspan="2" ><a href="{% url 'editline' post.id 12 %}"><b>Изменить</b></a></td>
+    </tr>
+    <tr>
+        <td><p></p>Дата П/П<p></p></td>
+        {% if post.pp_date %}
+            <td>{{post.pp_date}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+</table>
+
+<p></p>
+
+<table border="1" width="100%" bgcolor="#E6E6FA" bordercolor="#d3d3d3">
+    <tr>
+        <td  width="25%"><p></p>№ акта оказанных услуг<p></p></td>
+        {% if post.service_act_number %}
+            <td  width="25%">{{post.service_act_number}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+        <td  width="25%" align = "center" rowspan="2" ><a href="{% url 'editline' post.id 13 %}"><b>Изменить</b></a></td>
+    </tr>
+    <tr>
+        <td><p></p>Дата акта оказанных услуг<p></p></td>
+        {% if post.service_act_date %}
+            <td>{{post.service_act_date}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+</table>
+
+<p></p>
+
+<table border="1" width="100%" bgcolor="#E6E6FA" bordercolor="#d3d3d3">
+    <tr>
+        <td  width="25%"><p></p>Счет-фактура<p></p></td>
+        {% if post.bill_facture %}
+            <td  width="25%">{{post.bill_facture}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+        <td  width="25%" align = "center" rowspan="2" ><a href="{% url 'editline' post.id 14 %}"><b>Изменить</b></a></td>
+    </tr>
+    <tr>
+        <td><p></p>Дата счет-фактуры<p></p></td>
+        {% if post.bill_facture_date %}
+            <td>{{post.bill_facture_date}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+</table>
+
+<p></p>
+
+<table border="1" width="100%" bgcolor="#E6E6FA" bordercolor="#d3d3d3">
+    <tr>
+        <td  width="25%"><p></p>ШПЗ<p></p></td>
+        {% if post.spz %}
+            <td  width="25%">{{post.spz}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+        <td  width="25%" align = "center" rowspan="2" ><a href="{% url 'editline' post.id 15 %}"><b>Изменить</b></a></td>
+    </tr>
+    <tr>
+        <td><p></p>Срок действия ШПЗ<p></p></td>
+        {% if post.spz_date %}
+            <td>{{post.spz_date}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+</table>
+
+<p></p>
+
+<!-- WHITE BACKGOUND -->
+
+<table border="1" width="100%" bgcolor="" bordercolor="#d3d3d3">
+    <tr>
+        <td  width="25%"><p></p>Статус всей заявки<p></p></td>
+        {% if post.full_status %}
+            <td  width="25%">{{post.full_status}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+        <td  width="25%" align = "center" rowspan="3" ><a href="{% url 'editline' post.id 16 %}"><b>Изменить</b></a></td>
+    </tr>
+    <tr>
+        <td><p></p>Примечания<p></p></td>
+        {% if post.comment_1 %}
+            <td>{{post.comment_1}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+    <tr>
+        <td><p></p>Ответственный за заявку<p></p></td>
+        {% if post.executor %}
+            <td>{{post.executor}}</td>
+        {% else %}
+        <td width="25%"></td>
+        {% endif %}
+    </tr>
+</table>
+{% endblock %}

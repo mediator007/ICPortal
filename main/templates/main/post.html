@@ -1,0 +1,119 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+
+<table  border="0" width="100%">
+    <tr>
+        <td align = "left"><h3>Изделие</h3></td>
+        <td align = "right">
+            {% if post.cats_id == 1%}
+                {% if request.user == post.executor %}
+                <a href="{% url 'editLine' post.id%}"><b>Изменить</b></a>
+                {% endif %}
+            {% endif %}
+        </td>
+    </tr>
+</table>
+
+<table border="1" width="100%">
+    <tr>
+        <td><b>Тип</b></td>
+        <td><b>Наименование</b></td>
+        <td><b>Номер</b></td>
+        <td><b>Дец.номер</b></td>
+        <td><b>Количество</b></td>
+        <td><b>Дата начала</b></td>
+        <td>
+            {% if post.date_stop %}
+            <b>Дата завершения</b>
+            {% else %}
+            <b>Предварительная дата завершения</b>
+            {% endif %}
+        </td>
+        <td><b>Исполнитель</b></td>
+        <td><b>Вид испытаний</b></td>
+    </tr>
+    <tr>
+        <td>{{post.device_type}}</td>
+        <td>{{post.device_name}}</td>
+        <td>{{post.number}}</td>
+        <td>{{post.dec_number}}</td>
+        <td>{{post.quantity}}</td>
+        <td>{{post.date_start}}</td>
+        <td>
+            {% if post.date_stop %}
+            {{post.date_stop}}
+            {% else %}
+            {{post.date_stop_expected}}
+            {% endif %}
+        </td>
+        <td>{{post.executor}}</td>
+        <td>{{post.test_type}}</td>
+    </tr>
+</table>
+<p></p>
+
+{% if post.comment %}
+<b>Комментарий:</b> {{post.comment}}
+{% endif %}
+<p></p>
+{% if post.customer %}
+<b>Заказчик:</b> {{post.customer}}
+{% endif %}
+<p></p>
+{% if post.act_number %}
+<b>Номер акта:</b> {{post.act_number}}
+{% endif %}
+<p></p>
+
+{% if post.programm %}
+<b>Программа:</b> <a href="{{ post.programm.url }}">Открыть</a>
+{% endif %}
+
+<p></p>
+{% if post.act %}
+<b>Акт:</b> <a href="{{ post.act.url }}">Открыть</a>      
+{% endif %}
+
+<table border="0" width="100%">
+    <tr>
+        <td align = "left"><h3>Использованное оборудование</h3></td>
+        <td align = "right">
+            {% if post.cats_id == 1%}
+            <a href="{% url 'addEquipmentWork' post.id%}"><b>Добавить наработку</b></a>
+            {% endif %}    
+        </td>
+    </tr>
+</table>
+
+{% for item in equipment %}
+    {% if item.line_id_id == post.pk %}
+
+    <table border="1" width="100%">
+        <tr>
+            <td><b>Оборудование</b></td>
+            <td><b>Дата включения</b></td>
+            <td><b>Дата выключения</b></td>
+            <td><b>Время работы (часы)</b></td>
+            <td><b>Исполнитель</b></td>
+            <td><b>Действие</b></td>
+        </tr>
+        <tr>
+            <td>{{item.eq_name}}</td>
+            <td>{{item.date_start}}</td>
+            <td>{{item.date_stop}}</td>
+            <td>{{item.work_time}}</td>
+            <td>{{item.executor}}</td>
+            <td>
+                {% if post.cats_id == 1%}
+                <a href="{% url 'editEquipmentWork' post.id item.id%}">Изменить</a>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+    <p></p>
+
+    {% endif %}
+{% endfor %}
+
+{% endblock %}

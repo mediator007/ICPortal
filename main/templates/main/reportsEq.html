@@ -1,0 +1,12 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+
+<h3>Наработка ИО № {{eq}} по месяцам</h3> 
+
+{% for item in list%}
+
+<p><a href="{{item}}">{{item}}</a></p>
+
+{%endfor%}
+{% endblock %}

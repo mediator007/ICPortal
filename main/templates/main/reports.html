@@ -1,0 +1,12 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+
+<h3>Наработка оборудования</h3> 
+
+{% for item in equipment %}
+
+<p><a href="{{item.pk}}">{{item}}</a></p>
+
+{%endfor%}
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<h1>{{title}}</h1>
+    
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-error">{{ form.non_field_errors }}</div>
+{#        <div class="form-error"></div>#}
+    
+    
+    <p><label class="form-label" for="id_device_type">Тип изделия: </label><input type="text" name="device_type" maxlength="255" required id="id_device_type"></p>
+    <div class="form-error"></div>
+    
+    <p><label class="form-label" for="id_device_name">Наименование: </label><input type="text" name="device_name" maxlength="255" required id="id_device_name"></p>
+    <div class="form-error"></div>
+    
+    <p><label class="form-label" for="id_dec_number">Децимальный номер: </label><input type="text" name="dec_number" maxlength="255" id="id_dec_number"></p>
+    <div class="form-error"></div>
+    
+    <p><label class="form-label" for="id_number">Номер: </label><input type="text" name="number" maxlength="255" required id="id_number"></p>
+    <div class="form-error"></div>
+    
+    <p><label class="form-label" for="id_quantity">Количество: </label><input type="number" name="quantity" required id="id_quantity"></p>
+    <div class="form-error"></div>
+    
+    <p><label class="form-label" for="id_date_start">Дата начала испытаний: </label><input type="date" name="date_start" required id="id_date_start"></p>
+    <div class="form-error"></div>
+    
+    <p><label class="form-label" for="id_date_stop_expected">Ожидаемая дата завершения: </label><input type="date" name="date_stop_expected" required id="id_date_stop_expected"></p>
+    <div class="form-error"></div>
+    
+    <p><label class="form-label" for="id_date_stop">Дата завершения испытаний: </label><input type="date" name="date_stop" id="id_date_stop"></p>
+    <div class="form-error"></div>
+    
+    <p><label class="form-label" for="id_test_type">Вид испытаний: </label><select name="test_type" required id="id_test_type">
+        
+        
+        {% for eq in type_list %}
+        <option value="{{ eq.pk }}">{{ eq.name }}</option>
+        {% endfor %}
+        <option value="" selected>Не выбрано</option>
+
+    </select></p>
+   
+    <div class="form-error"></div>
+    <p><select name="executor" required hidden id="id_executor">
+    
+    <option value="{{ request.user.id }}" selected>{{ request.user }}</option>
+    
+    </select></p>
+    <div class="form-error"></div>
+    
+    <p><label class="form-label" for="id_cats">Статус: </label><select name="cats" required id="id_cats">
+    
+    
+    {% for eq in status_list %}
+    <option value="{{ eq.pk }}">{{ eq.name }}</option>
+    {% endfor %}
+    <option value="" selected>Не выбрано</option>
+    
+    </select></p>
+    <div class="form-error"></div>
+    
+<!--    <p><label class="form-label" for="id_act_number">Номер акта: </label><input type="text" name="act_number" maxlength="255" id="id_act_number"></p>-->
+<!--    <div class="form-error"></div>-->
+    
+    <p><label class="form-label" for="id_customer">Заказчик: </label><input type="text" name="customer" maxlength="255" id="id_customer"></p>
+    <div class="form-error"></div>
+    
+    <p><label class="form-label" for="id_comment">Комментарий: </label><input type="text" name="comment" maxlength="255" id="id_comment"></p>
+    <div class="form-error"></div>
+    
+    <p><label class="form-label" for="id_act">Акт: </label><input type="file" name="act" id="id_act"></p>
+    <div class="form-error"></div>
+    
+    <p><label class="form-label" for="id_programm">Программа: </label><input type="file" name="programm" id="id_programm"></p>
+    <div class="form-error"></div>
+    
+    
+    
+        <button type="submit">Добавить</button>
+    </form>
+    
+    
+
+{% endblock %}

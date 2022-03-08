@@ -1,0 +1,32 @@
+{% extends 'contract/base.html' %}
+
+{% block content %}
+<ul class="list-articles">
+	{% for p in complete %}
+			<li><div class="article-panel">
+	<p class="first"><b>Статус:</b> {{p.full_status}}
+
+
+</div>
+
+			<div class="clear"></div>
+			<table border="0" width="100%">
+				<tr>
+					<td width="25%"><b>Организация</b></td>
+					<td width="25%"><b>Изделие</b></td>
+					<td width="25%"><b>Входящий номер</b></td>
+					<td width="25%"><b>Дата заявки</b></td>
+				</tr>
+				<tr>
+					<td>{{p.organization}}</td>
+					<td>{{p.device}}</td>
+					<td>{{p.enter_number}}</td>
+					<td>{{p.request_date}}</td>
+				</tr>
+			</table>
+				<p class="link-read-post"><a href="{{ p.get_absolute_url }}">Открыть изделие</a></p>
+			</li>
+
+	{% endfor %}
+</ul>
+{% endblock %}

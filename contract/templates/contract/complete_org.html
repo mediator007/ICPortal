@@ -1,0 +1,9 @@
+{% extends 'contract/base.html' %}
+
+{% block content %}
+
+{% for org in organizations %}
+<a href="{% url 'complete' org.pk %}"><b>{{ org.name }}</b></a>
+<p></p>
+{% endfor %}
+{% endblock %}

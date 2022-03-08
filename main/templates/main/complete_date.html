@@ -1,0 +1,49 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<h3>Завершенные изделия {{date}}</h3> 
+<ul class="list-articles">
+    {% for p in list %}
+			<li><div class="article-panel">
+	<p class="first"><b>Исполнитель:</b> {{p.executor}}&nbsp;&nbsp;&nbsp;</p>
+	
+	{% if p.act_number %}
+	<p class="first"><b>Номер акта:</b> <font color="green"><b>{{p.act_number}}</b></font></p>
+	{% endif %}
+	
+</div> 
+
+			<div class="clear"></div>
+			<table border="0" width="100%">
+				<tr align=center>
+					<td><b>Тип</b></td>
+					<td><b>Наименование</b></td>
+					<td><b>Номер</b></td>
+					
+					<td><b>Дец.номер</b></td>
+					<td><b>Количество</b></td>
+					<td><b>Дата начала</b></td>
+					<td><b>Дата завершения</b></td>
+					<td><b>Вид испытаний</b></td>
+				</tr>
+				<tr align=center>
+					<td>{{p.device_type}}</td>
+					<td>{{p.device_name}}</td>
+					<td>{{p.number}}</td>
+					
+					<td>{{p.dec_number}}</td>
+					<td>{{p.quantity}}</td>
+					<td>{{p.date_start}}</td>
+					<td>{{p.date_stop}}</td>
+					<td>{{p.test_type}}</td>
+				</tr>
+			</table>
+			<p class="link-read-post"><a href="{{ p.get_absolute_url }}">Открыть изделие</a></p>
+			
+			</li>
+			{% if p.comment %}
+			<b>Комментарий:</b> {{post.comment}}
+			{% endif %}
+    {% endfor %}
+
+	{% endblock %}

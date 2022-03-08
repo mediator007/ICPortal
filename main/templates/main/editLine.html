@@ -1,0 +1,36 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<h3>Изенить запись об изделии</h3>
+
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+    
+        <div class="form-error">{{ form.non_field_errors }}</div>
+    
+    {% for f in form %}
+
+    {% if f.label == "Исполнитель" %}
+    <p><select name="executor" required hidden id="id_executor">
+    <option value="{{ post.executor_id }}" selected>{{ post.executor }}</option>
+    </select></p>
+        {% elif f.label == "Номер акта" %}
+            {% if act_number == None %}
+            <a href="{% url 'getactnumber' post.id %}">Получить номер акта</a>
+            {% else %}
+            Номер акта: &nbsp; &nbsp; <b>{{ act_number }}</b>
+            <p><select name="act_number" required hidden id="id_act_number">
+            <option value="{{ act_number }}" selected>{{ act_number }}</option>
+            </select></p>
+            <div class="form-error"></div>
+            {% endif %}
+        {% else %}
+    <p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
+    <div class="form-error">{{ f.errors }}</div>
+    {% endif %}
+    {% endfor %}
+    
+    
+        <button type="submit">Изменить</button>
+    </form>
+{% endblock %}

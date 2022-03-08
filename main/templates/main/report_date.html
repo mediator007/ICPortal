@@ -1,0 +1,44 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<h3>Наработка ИО №{{equipment}} за {{date}}</h3> 
+<h3>Сумма за месяц {{sum}} ч</h3>
+    {% for p in list %}
+
+			<table border="1" width="100%">
+				<tr>
+					
+					<td width="13%"><b>Наименование</b></td>
+					<td width="13%"><b>Дата начала</b></td>
+                    <td width="13%"><b>Дата окончания</b></td>
+                    <td width="13%"><b>Время работы</b></td>
+                    <td width="13%"><b>Исполнитель</b></td>
+                    <td width="13%"><b>Изделие</b></td>
+                    <td width="13%"><b>Испытание</b></td>
+				</tr>
+				<tr>
+					<td>{{p.eq_name}}</td>
+					<td>{{p.date_start}}</td>
+                    <td>{{p.date_stop}}</td>
+                    <td>{{p.work_time}}</td>
+                    <td>{{p.executor}}</td>
+                    <td>
+                        {% for item in device %}
+                            {% if item.id == p.line_id_id %}
+                                {{item.device_name}}
+                            {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% if p.line_id_id != None %}
+                        <a href="{% url 'post' p.line_id_id %}"><b>Перейти</b></a>
+                        {% else %}
+                        <a href="{% url 'contract_post' p.line_contract_id %}"><b>Перейти (Договорные)</b></a>
+                        {% endif %}
+                    </td>
+				</tr>
+			</table>
+			<p></p>
+    {% endfor %}
+
+{% endblock %}

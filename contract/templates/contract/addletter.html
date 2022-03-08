@@ -1,0 +1,24 @@
+{% extends 'contract/base.html' %}
+
+{% block content %}
+<h3>Изменить письмо</h3>
+
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-error">{{ form.non_field_errors }}</div>
+        {% for f in form %}
+        {% if f.label == "Договор" %}
+        <p><select name="line_contract" required  hidden id="line_contract_id">
+            <option value="{{ num }}" selected>{{ num }}</option>
+        </select></p>
+        <div class="form-error"></div>
+        {% else %}
+            <p><label class="form-label" >{{f.label}}: </label>{{ f }}</p>
+            <div class="form-error">{{ f.errors }}</div>
+        {% endif %}
+        {% endfor %}
+
+        <button type="submit">Добавить</button>
+    </form>
+{% endblock %}

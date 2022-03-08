@@ -1,0 +1,44 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+
+<ul class="list-articles">
+	{% for p in posts %}
+			<li><div class="article-panel">
+	<p class="first"><b>Статус:</b> {{p.cats}} &nbsp;&nbsp;&nbsp;<b>Исполнитель:</b> {{p.executor}}</p>
+
+	
+</div> 
+
+			<div class="clear"></div>
+			<table border="0" width="100%">
+				<tr>
+					<td width="10%"><b>Тип</b></td>
+					<td width="10%"><b>Наименование</b></td>
+					<td width="10%"><b>Номер</b></td>
+					<td width="10%"><b>Дец.номер</b></td>
+					<td width="10%"><b>Дата начала</b></td>
+					<td width="20%"><b>Предварительная дата завершения</b></td>
+					<td width="10%"><b>Количество</b></td>
+					<td width="10%"><b>Вид испытаний</b></td>
+				</tr>
+				<tr>
+					<td>{{p.device_type}}</td>
+					<td>{{p.device_name}}</td>
+					<td>{{p.number}}</td>
+					<td>{{p.dec_number}}</td>
+					<td>{{p.date_start}}</td>
+        			<td>{{p.date_stop_expected}}</td>
+					<td>{{p.quantity}}</td>
+					<td>{{p.test_type}}</td>
+				</tr>
+			</table>
+			<p class="link-read-post"><a href="{{ p.get_absolute_url }}">Открыть изделие</a></p>
+			{% if p.comment%}
+			<b>Комментарий:</b>&nbsp;{{ p.comment }}
+			{% endif %}
+			</li>
+		
+	{% endfor %}
+</ul>
+{% endblock %}

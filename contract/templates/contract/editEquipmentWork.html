@@ -1,0 +1,29 @@
+{% extends 'contract/base.html' %}
+
+{% block content %}
+<h3>Изенить запись об изделии</h3>
+
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+    
+        <div class="form-error">{{ form.non_field_errors }}</div>
+    
+    {% for f in form %}
+    
+    {% if f.label == "Договорное испытание" %}
+    <p></label><p><select name="line_contract" required hidden>
+    <option value="{{ id }}" selected>{{ id }}</option>
+    </select></p></p>
+    <div class="form-error">{{ f.errors }}</div>
+
+    {% else %}
+
+    <p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
+    <div class="form-error">{{ f.errors }}</div>
+    {% endif %}
+    {% endfor %}
+    
+    
+        <button type="submit">Изменить</button>
+    </form>
+{% endblock %}
