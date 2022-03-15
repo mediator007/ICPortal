@@ -1,4 +1,4 @@
-import numbers
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
@@ -11,7 +11,7 @@ class Line(models.Model):
     device_name = models.CharField(max_length=255, blank=False, verbose_name="Наименование")
     dec_number = models.CharField(null=True, max_length=255, blank=True, verbose_name="Децимальный номер")
     number = models.CharField(max_length=255, verbose_name="Номер")
-    quantity = models.IntegerField(blank=False, verbose_name="Количество")
+    quantity = models.IntegerField(blank=False, validators=[MinValueValidator(1)], verbose_name="Количество")
     time_create = models.DateTimeField(auto_now_add=True, verbose_name="Время создания")
     date_start = models.DateField(blank=False, verbose_name="Дата начала испытаний")
     date_stop_expected = models.DateField(blank=False, verbose_name="Ожидаемая дата завершения")
@@ -37,7 +37,7 @@ class Line(models.Model):
     class Meta:
         verbose_name = 'Изделие'
         verbose_name_plural = 'Изделия'
-        ordering = ['-id']
+        ordering = ['date_stop_expected']
 
 
 class EquipmentWork(models.Model):
@@ -61,17 +61,21 @@ class EquipmentWork(models.Model):
 class Equipment(models.Model):
     name = models.CharField(max_length=100, db_index=True, verbose_name="Испытательное оборудование")
     number = models.CharField(max_length=100, db_index=True, verbose_name="Заводской номер")
-    
+    order_number = models.IntegerField(max_length=1000, default=0)
+
     def __str__(self):
         return self.name
 
     class Meta:
         verbose_name = 'Испытательное оборудование'
         verbose_name_plural = 'Испытательное оборудование'
-        ordering = ['name']
+        ordering = ['order_number']
 
 
 class Mode(models.Model):
+    """
+    Create modes like: High temperature, Low temperature etc.
+    """
     name = models.CharField(max_length=100, db_index=True, verbose_name="Режим")
 
     def __str__(self):
@@ -83,7 +87,11 @@ class Mode(models.Model):
         ordering = ['name']
 
 
-class Category(models.Model): #Класс Текущие, Завершенные
+class Category(models.Model):
+    """
+    Create categories 1) in progress 2) complete
+    Numeration important!
+    """
     name = models.CharField(max_length=100, db_index=True, verbose_name="Статус")
     
     def __str__(self):

@@ -2,11 +2,12 @@ from django.contrib import admin
 
 from .models import *
 
+
 class LineAdmin(admin.ModelAdmin):
-    list_display = ('id', 'device_name', 'date_start', 'date_stop',  'executor', 'test_type')
+    list_display = ('id', 'device_name', 'date_start', 'date_stop_expected',  'executor', 'test_type')
     list_display_links = ('id', 'device_name')
     search_fields = ['device_name']
-    list_editable = ('test_type', 'date_start', 'date_stop', 'executor')
+    list_editable = ('test_type', 'date_start', 'date_stop_expected', 'executor')
     list_filter = ('device_name', 'date_start', 'date_stop', 'test_type', 'executor')
 
 

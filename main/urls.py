@@ -11,13 +11,12 @@ urlpatterns = [
     path('register/', RegisterUser.as_view(), name='register'),
     path('post/<int:post_id>/', ShowPost.as_view(), name='post'),
     path('editLine/<int:id>/', editLine, name='editLine'),
-    # id - , id1 -
     path('editEquipmentWork/<int:id>/<int:id1>/', editEquipmentWork, name='editEquipmentWork'),
     path('search_results/', search, name='search_results'),
     path('complete/', complete, name='complete'),
     path('complete/<str:date>', complete_date, name='complete_date'),
     path('reports/', reports, name='reports'),
-    path('reports/<int:id>/', reports_eq, name='reports_eq'),
-    path('reports/<int:id>/<str:date>', report_date, name='report_date'),
-    path('getactnumber/<int:id>/', get_act_number, name='getactnumber')
+    path('reports/<int:eq_pk>/', reports_eq, name='reports_eq'),
+    path('reports/<int:eq_pk>/<str:date>', report_date, name='report_date'),
+    path('getactnumber/<int:post_id>/', get_act_context, name='getactnumber')
 ]

@@ -2,20 +2,28 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.exceptions import ValidationError
-from .models import *
+
+from main.models import *
+from main.forms_services import *
 
 
-class AddPostForm(forms.ModelForm):  # , User):
+class AddPostForm(forms.ModelForm):
+    """
+    Form to add new Line object
+    """
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # self.fields['cats'].empty_label = "Категория не выбрана"
-        # self.fields['executor'] = forms.CharField(widget=forms.HiddenInput())
 
     class Meta:
         model = Line
         fields = '__all__'
-        # widgets = {'executor': forms.HiddenInput()}
+        widgets = {
+            'date_start': forms.SelectDateWidget(),
+            'date_stop_expected': forms.SelectDateWidget(),
+            'date_stop': forms.SelectDateWidget(),
+            'comment': forms.Textarea()
+        }
 
     def clean(self):
         cleaned_data = super().clean()
@@ -26,17 +34,18 @@ class AddPostForm(forms.ModelForm):  # , User):
         customer = cleaned_data.get('customer')
         act = cleaned_data.get('act')
         programm = cleaned_data.get('programm')
-
         # Checking all fields before change status in periodic tests
-        if status == Category.objects.get(name='Завершенные') and test_type == TestType.objects.get(
-                name='Периодические'):
-            if (date_stop == None or customer == None or act == None or programm == None):  # or act_number == None
-                raise ValidationError(
-                    "Нельзя установить статус 'Завершенные' без заполнения остальных полей"
-                )
+        check_addpostform(
+            status, test_type, date_stop,
+            customer, act_number, act, programm
+        )
 
 
 class AddEquipmentForm(forms.ModelForm):
+    """
+    Form to add EquipmentWork object.
+    Line_id field filling automatically.
+    """
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['eq_name'].empty_label = "Оборудование не выбрано"
@@ -54,7 +63,7 @@ class AddEquipmentForm(forms.ModelForm):
             'date_start': forms.SelectDateWidget()
         }
 
-    # Checking max monthly working time fo equipment
+
     def clean(self):
         cleaned_data = super().clean()
         name_input = cleaned_data.get('eq_name')
@@ -62,15 +71,11 @@ class AddEquipmentForm(forms.ModelForm):
         eq_name = Equipment.objects.get(name=name_input)
         work_time = cleaned_data.get('work_time')
         equip = EquipmentWork.objects.filter(eq_name=eq_name)
-        sum = 0
-        for eq in equip:
-            if eq.date_stop.strftime("%Y-%m") == date_input.strftime("%Y-%m"):
-                sum += eq.work_time
-        if (work_time + sum) > 700:
-            raise ValidationError(
-                f"Наработка камеры заполнена, выберите другую камеру. Ограничение месячной наработки \
-                700 часов. ИО № {eq_name} - наработка {sum} часов."
-            )
+        # Checking max monthly working time fo equipment
+        check_monthly_equip_work_time(
+                date_input, eq_name,
+                work_time, equip
+        )
 
 
 class RegisterUserForm(UserCreationForm):

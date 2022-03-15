@@ -1,5 +1,3 @@
-
-#from Tools.scripts.make_ctype import method
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.http import HttpResponseNotFound
@@ -7,11 +5,15 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
 
 from main.models import EquipmentWork
-from main.utils import DataMixin
-from .forms import *
+from main.utils import DataMixin, menu
+from contract.forms import *
 
 
 class LineContractHome(LoginRequiredMixin, PermissionRequiredMixin, DataMixin, ListView):
+    """
+    Create context for 'home' page with LineContract
+    objects that have full_status=1 'in progress'
+    """
     # 'contract' - app name, 'linecontract' - model name
     permission_required = 'contract.view_linecontract'
     # Was edit mixins.py class AccessMixin in
@@ -31,6 +33,10 @@ class LineContractHome(LoginRequiredMixin, PermissionRequiredMixin, DataMixin, L
 
 
 class CompleteOrganizations(LoginRequiredMixin, PermissionRequiredMixin, DataMixin, ListView):
+    """
+    Create context with list of existing
+    organizations from Organization class
+    """
     permission_required = 'contract.view_linecontract'
     template_name = 'contract/complete_org.html'
     context_object_name = 'organizations'
@@ -45,6 +51,11 @@ class CompleteOrganizations(LoginRequiredMixin, PermissionRequiredMixin, DataMix
 
 
 class Complete(LoginRequiredMixin, PermissionRequiredMixin, DataMixin, ListView):
+    """
+    Create context for 'complete' page with LineContract
+    objects that have full_status=2 'completed' and chosen organization
+    'org' in queryset
+    """
     permission_required = 'contract.view_linecontract'
     raise_exception = False
     template_name = 'contract/complete.html'
@@ -62,6 +73,11 @@ class Complete(LoginRequiredMixin, PermissionRequiredMixin, DataMixin, ListView)
 
 
 class ShowPost(LoginRequiredMixin, PermissionRequiredMixin, DataMixin, DetailView):
+    """
+    Create context for page with LineContract object card, and also
+    EquipmentWork and Letters objects which belongs to LineContract
+    object pk=post_id
+    """
     permission_required = 'contract.view_linecontract'
     raise_exception = False
     model = LineContract
@@ -80,6 +96,9 @@ class ShowPost(LoginRequiredMixin, PermissionRequiredMixin, DataMixin, DetailVie
 @login_required
 @permission_required('contract.add_linecontract', raise_exception=False)
 def add_page(request):
+    """
+    Create page with form to add new LineContract object
+    """
     title = 'Добавить запись'
     form = AddPostForm1()
     if request.method == 'POST':
@@ -87,8 +106,8 @@ def add_page(request):
         if form.is_valid():
             form.save()
             return redirect(f'/')
-
-    context = {'title': title, 'form': form}
+    context_menu = menu
+    context = {'title': title, 'form': form, 'menu': context_menu}
     return render(request, "contract/addpage.html", context)
 
 
@@ -96,6 +115,10 @@ def add_page(request):
 @permission_required('contract.add_linecontract', raise_exception=False)
 # n - number of AddPostForm
 def edit_line(request, id: int, n: int):
+    """
+    Create page with one of AddPostForm_'n'_, that wil edit fields
+    of LineContract object pk=id from 'n' block
+    """
     post = LineContract.objects.get(id=id)
     # Using different Form classes
     str_class = f'AddPostForm{n}'
@@ -107,7 +130,8 @@ def edit_line(request, id: int, n: int):
             if form.is_valid():
                 form.save()
                 return redirect('/')
-        context = {'form': form, 'post': post}
+        context_menu = menu
+        context = {'form': form, 'post': post, 'menu': context_menu}
         return render(request, "contract/editline.html", context)
     else:
         return HttpResponseNotFound('<h1>Запрет изменения Завершенных испытаний</h1>')
@@ -116,13 +140,17 @@ def edit_line(request, id: int, n: int):
 @login_required
 @permission_required('contract.add_linecontract', raise_exception=False)
 def search(request):
+    """
+    Create context with searching results
+    """
     q = request.GET.get('q')
     results_device = LineContract.objects.filter(device=q)
     try:
         organization = Organization.objects.get(name=q)
         results_organization = LineContract.objects.filter(organization=organization.pk)
         context = {'res1': results_device, 'res2': results_organization, 'q': q}
-    except:
+    except Exception as e:
+        print(e)
         context = {'res1': results_device, 'q': q}
     finally:
         return render(request, 'contract/search.html', context)
@@ -131,6 +159,9 @@ def search(request):
 @login_required
 @permission_required('contract.add_linecontract', raise_exception=False)
 def add_letter(request, num):
+    """
+    Create page with form for adding Letter object
+    """
     title = 'Добавить письмо'
     form = LetterPostForm()
     if request.method == 'POST':
@@ -146,6 +177,10 @@ def add_letter(request, num):
 @login_required
 @permission_required('contract.add_linecontract', raise_exception=False)
 def edit_letter(request, num, num1):
+    """
+    Create page with form to edit Letter object pk=num1 that belong
+    to LineContract object pk=num
+    """
     post = Letters.objects.get(id=num1)
     form = LetterPostForm(instance=post)
     if request.method == 'POST':
@@ -162,6 +197,10 @@ def edit_letter(request, num, num1):
 @login_required
 @permission_required('contract.add_linecontract', raise_exception=False)
 def add_equipment_work(request, num: int):
+    """
+    Create a page with form to add Equipment work object
+    that will belong to LineContract object pk=num
+    """
     form = AddEquipmentForm()
     if request.method == 'POST':
         form = AddEquipmentForm(request.POST)
@@ -174,7 +213,11 @@ def add_equipment_work(request, num: int):
 
 @login_required
 @permission_required('contract.add_linecontract', raise_exception=False)
-def edit_equipment_work(request, num, num1):
+def edit_equipment_work(request, num: int, num1: int):
+    """
+    Create page with form to edit EquipmentWork object pk=num1,
+    that belong LineContract object pk=num
+    """
     post = EquipmentWork.objects.get(id=num1)
     form = AddEquipmentForm(instance=post)
     if request.method == 'POST':
